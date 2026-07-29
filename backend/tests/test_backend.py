@@ -60,7 +60,42 @@ class TestAuthMe:
         assert r.status_code == 200, r.text
         d = r.json()
         assert d["discord_id"] == "999000111222333444"
-        assert "character" in d and "licenses" in d and "properties" in d and "vehicles" in d
         assert d["discord"]["username"] == "TestCitizen"
-        # No mongo ObjectId leak
         assert "_id" not in d
+        # New multi-character schema
+        assert "characters" in d and isinstance(d["characters"], list) and len(d["characters"]) == 2
+        assert "active_character" in d
+        for ch in d["characters"]:
+            for k in ["cash", "bank", "crypto", "status", "inventory", "skills", "licenses",
+                      "properties", "vehicles", "transactions"]:
+                assert k in ch, f"character missing {k}"
+            for vk in ["health", "armor", "hunger", "thirst", "stress"]:
+                assert vk in ch["status"], f"status missing {vk}"
+            assert isinstance(ch["inventory"], list) and len(ch["inventory"]) > 0
+            assert isinstance(ch["transactions"], list) and len(ch["transactions"]) > 0
+
+
+# --------------------- /api/server/players-live ---------------------
+class TestPlayersLive:
+    def test_players_live_shape(self):
+        r = requests.get(f"{BASE_URL}/api/server/players-live", timeout=10)
+        assert r.status_code == 200
+        d = r.json()
+        assert "count" in d and "players" in d
+        assert d["count"] == 8
+        assert len(d["players"]) == 8
+        for p in d["players"]:
+            for k in ["id", "name", "type", "x", "y", "heading"]:
+                assert k in p
+
+    def test_players_live_moves(self):
+        import time as _t
+        r1 = requests.get(f"{BASE_URL}/api/server/players-live", timeout=10).json()
+        _t.sleep(2.5)
+        r2 = requests.get(f"{BASE_URL}/api/server/players-live", timeout=10).json()
+        # At least one player's coords should differ
+        moved = any(
+            r1["players"][i]["x"] != r2["players"][i]["x"] or r1["players"][i]["y"] != r2["players"][i]["y"]
+            for i in range(len(r1["players"]))
+        )
+        assert moved, "players did not move between polls"

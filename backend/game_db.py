@@ -149,26 +149,52 @@ async def fetch_player_by_discord(discord_id: str):
                 except Exception:
                     pass  # housing table optional / script-specific
 
-                return {
-                    "discord_id": discord_id,
-                    "character": {
-                        "name": name.upper(),
-                        "citizen_id": citizenid,
-                        "cash": int(money.get("cash", 0)),
-                        "bank": int(money.get("bank", 0)),
-                        "job": job.get("label", job.get("name", "Unemployed")),
-                        "gang": metadata.get("gang", {}).get("label", "None")
-                        if isinstance(metadata.get("gang"), dict)
-                        else "None",
+                character = {
+                    "id": f"char_{citizenid}",
+                    "citizen_id": citizenid,
+                    "name": name.upper(),
+                    "firstname": charinfo.get("firstname", ""),
+                    "lastname": charinfo.get("lastname", ""),
+                    "cash": int(money.get("cash", 0)),
+                    "bank": int(money.get("bank", 0)),
+                    "crypto": float(money.get("crypto", 0) or 0),
+                    "job": {
+                        "label": job.get("label", job.get("name", "Unemployed")),
+                        "grade": str((job.get("grade") or {}).get("name", "") if isinstance(job.get("grade"), dict) else job.get("grade", "")),
+                        "onduty": bool(job.get("onduty", False)),
                     },
+                    "gang": metadata.get("gang", {}).get("label", "None")
+                    if isinstance(metadata.get("gang"), dict)
+                    else "None",
+                    "phone": charinfo.get("phone", ""),
+                    "playtime_hours": int(metadata.get("playtime", 0) or 0) // 60,
+                    "status": {
+                        "health": int(metadata.get("health", 100) or 100),
+                        "armor": int(metadata.get("armor", 0) or 0),
+                        "hunger": int(metadata.get("hunger", 100) or 100),
+                        "thirst": int(metadata.get("thirst", 100) or 100),
+                        "stress": int(metadata.get("stress", 0) or 0),
+                    },
+                    "skills": [],
                     "licenses": {
                         "drivers": bool(licences.get("driver", False)),
                         "weapons": bool(licences.get("weapon", False)),
                         "commercial": bool(licences.get("commercial", licences.get("business", False))),
                         "pilot": bool(licences.get("pilot", False)),
                     },
+                    # ox_inventory / qb-inventory: parse the `inventory` JSON column here.
+                    "inventory": _load_json(row.get("inventory"), []) if "inventory" in row else [],
+                    "max_weight": 120.0,
                     "properties": properties,
                     "vehicles": vehicles,
+                    "transactions": [],
+                    "position": {"x": 0, "y": 0},
+                    "primary": True,
+                }
+                return {
+                    "discord_id": discord_id,
+                    "characters": [character],
+                    "active_character": 0,
                     "data_source": "live",
                 }
     except Exception as e:

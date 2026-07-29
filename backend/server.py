@@ -6,6 +6,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 import random
+import time
+import math
 from pathlib import Path
 from pydantic import BaseModel, Field
 from typing import Optional, List
@@ -106,6 +108,41 @@ async def server_status():
         return ServerStatus(**_mock_status())
 
 
+# Base "patrol routes" for the live map. Each player orbits a home point so the
+# blips visibly move on every poll. In production, feed real positions from your
+# server (e.g. an OneSync export writing player coords to Redis/Mongo).
+_LIVE_PLAYERS = [
+    {"id": 1, "name": "Vinnie Calabria", "type": "civ", "home": (215, -810), "r": 260, "spd": 0.7},
+    {"id": 2, "name": "Officer Dane", "type": "police", "home": (428, -984), "r": 180, "spd": 1.1},
+    {"id": 3, "name": "Dr. Alvarez", "type": "ems", "home": (307, -1433), "r": 120, "spd": 0.9},
+    {"id": 4, "name": "Rico Vagos", "type": "civ", "home": (1200, -1600), "r": 340, "spd": 0.8},
+    {"id": 5, "name": "Mika Drift", "type": "civ", "home": (-330, -140), "r": 300, "spd": 1.4},
+    {"id": 6, "name": "Sgt. Boone", "type": "police", "home": (-450, 6015), "r": 220, "spd": 1.0},
+    {"id": 7, "name": "Lena Frost", "type": "civ", "home": (-1180, -1500), "r": 280, "spd": 0.6},
+    {"id": 8, "name": "Tow Joe", "type": "civ", "home": (900, -2100), "r": 200, "spd": 1.2},
+]
+
+
+@api_router.get("/server/players-live")
+async def players_live():
+    """Live (mock) player positions in GTA game coordinates for the web map."""
+    t = time.time()
+    out = []
+    for p in _LIVE_PLAYERS:
+        ang = (t * 0.15 * p["spd"] + p["id"]) % (2 * math.pi)
+        x = p["home"][0] + math.cos(ang) * p["r"]
+        y = p["home"][1] + math.sin(ang) * p["r"]
+        out.append({
+            "id": p["id"],
+            "name": p["name"],
+            "type": p["type"],
+            "x": round(x, 1),
+            "y": round(y, 1),
+            "heading": round((math.degrees(ang) + 90) % 360, 1),
+        })
+    return {"count": len(out), "players": out}
+
+
 # ===========================================================================
 # DISCORD OAUTH2
 # ---------------------------------------------------------------------------
@@ -140,45 +177,132 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
     user = await db.players.find_one({"discord_id": payload["sub"]}, {"_id": 0})
     if not user:
         raise HTTPException(status_code=404, detail="Player not found")
+    # Migrate legacy single-character docs to the new multi-character schema.
+    if "characters" not in user:
+        username = (user.get("discord") or {}).get("username", "Citizen")
+        seeded = _seed_fivem_profile(payload["sub"], username)
+        seeded["discord"] = user.get("discord")
+        await db.players.update_one({"discord_id": payload["sub"]}, {"$set": seeded})
+        seeded.pop("_id", None)
+        user = {**user, **seeded}
     return user
 
 
-def _seed_fivem_profile(discord_id: str, username: str) -> dict:
-    """Mock TMC / QBCore / ESX-style character data for a freshly linked account.
+def _make_character(discord_id: str, first: str, last: str, primary: bool) -> dict:
+    """Build one rich mock character (QBCore/TMC/ESX shaped)."""
+    plates = ["NEON4LYF", "GH0ST22", "APEX09", "V1CE", "PLATNM", "DR1FT"]
+    random.shuffle(plates)
+    jobs = [
+        {"label": "Police Officer", "grade": "Sergeant", "onduty": True},
+        {"label": "EMS Paramedic", "grade": "Senior", "onduty": False},
+        {"label": "Mechanic", "grade": "Owner", "onduty": True},
+        {"label": "Unemployed", "grade": "Freelancer", "onduty": False},
+    ]
+    inventory_pool = [
+        {"name": "phone", "label": "Phone", "type": "item", "weight": 0.19, "rarity": "common"},
+        {"name": "water_bottle", "label": "Water", "type": "item", "weight": 0.5, "rarity": "common"},
+        {"name": "sandwich", "label": "Sandwich", "type": "item", "weight": 0.4, "rarity": "common"},
+        {"name": "bandage", "label": "Bandage", "type": "item", "weight": 0.1, "rarity": "common"},
+        {"name": "lockpick", "label": "Lockpick", "type": "tool", "weight": 0.2, "rarity": "uncommon"},
+        {"name": "radio", "label": "Radio", "type": "tool", "weight": 0.6, "rarity": "uncommon"},
+        {"name": "weapon_pistol", "label": "Pistol", "type": "weapon", "weight": 1.2, "rarity": "rare"},
+        {"name": "ammo_9", "label": "9mm Ammo", "type": "ammo", "weight": 0.03, "rarity": "common"},
+        {"name": "gold_chain", "label": "Gold Chain", "type": "valuable", "weight": 0.25, "rarity": "epic"},
+        {"name": "id_card", "label": "ID Card", "type": "item", "weight": 0.0, "rarity": "common"},
+        {"name": "repair_kit", "label": "Repair Kit", "type": "tool", "weight": 2.0, "rarity": "uncommon"},
+        {"name": "lockpick_adv", "label": "Adv. Lockpick", "type": "tool", "weight": 0.3, "rarity": "rare"},
+    ]
+    inv = []
+    for it in random.sample(inventory_pool, random.randint(7, 10)):
+        amount = 1 if it["type"] in ("weapon", "tool", "valuable") else random.randint(1, 12)
+        if it["name"] == "ammo_9":
+            amount = random.randint(30, 250)
+        inv.append({**it, "amount": amount})
 
-    In production this data comes from your MySQL game DB. Query examples per framework:
-      TMC    -> SELECT * FROM users WHERE identifier = ? (accounts/job/licenses stored on the
-                TMC user row + related character tables; adjust column names to your TMC build)
-      QBCore -> SELECT * FROM players WHERE license = ? (charinfo/money/... JSON columns)
-      ESX    -> SELECT * FROM users WHERE identifier = ? (accounts/job/... columns)
-      Vehicles -> SELECT * FROM player_vehicles WHERE citizenid/owner/identifier = ?
-    """
-    plates = ["NEON4LYF", "GHOST22", "APEX 09", "V1CE C1TY", "LSPD K9"]
+    skills = [
+        {"name": "Driving", "level": random.randint(40, 100)},
+        {"name": "Shooting", "level": random.randint(20, 95)},
+        {"name": "Stamina", "level": random.randint(30, 100)},
+        {"name": "Strength", "level": random.randint(25, 90)},
+        {"name": "Lung Capacity", "level": random.randint(10, 80)},
+    ]
+    tx_types = ["deposit", "withdraw", "transfer", "paycheck"]
+    transactions = [
+        {
+            "type": random.choice(tx_types),
+            "label": random.choice(["ATM Legion", "Paycheck", "Sent to Vinnie", "Vehicle Sale", "Rent", "Bank Transfer"]),
+            "amount": random.randint(50, 25000),
+            "date": (datetime.now(timezone.utc) - timedelta(hours=i * 7)).isoformat(),
+        }
+        for i in range(6)
+    ]
+
     return {
-        "discord_id": discord_id,
-        "character": {
-            "name": username.upper() + " MERCER",
-            "citizen_id": "TMC" + str(random.randint(10000, 99999)),
-            "cash": random.randint(1200, 8500),
-            "bank": random.randint(45000, 320000),
-            "job": random.choice(["Police Officer", "EMS", "Mechanic", "Unemployed"]),
-            "gang": random.choice(["Vagos", "Ballas", "None", "The Company"]),
+        "id": f"char_{first.lower()}",
+        "citizen_id": "TMC" + str(random.randint(10000, 99999)),
+        "name": f"{first} {last}",
+        "firstname": first,
+        "lastname": last,
+        "cash": random.randint(1200, 8500),
+        "bank": random.randint(45000, 420000),
+        "crypto": round(random.uniform(0.1, 4.5), 3),
+        "job": random.choice(jobs),
+        "gang": random.choice(["Vagos", "Ballas", "The Company", "None"]),
+        "phone": f"555-0{random.randint(100,199)}",
+        "playtime_hours": random.randint(80, 900),
+        "level": random.randint(5, 60),
+        "xp": random.randint(0, 100),
+        "primary": primary,
+        "status": {
+            "health": random.randint(60, 100),
+            "armor": random.randint(0, 100),
+            "hunger": random.randint(35, 100),
+            "thirst": random.randint(35, 100),
+            "stress": random.randint(0, 60),
         },
+        "skills": skills,
         "licenses": {
             "drivers": True,
             "weapons": random.choice([True, False]),
             "commercial": random.choice([True, False]),
             "pilot": random.choice([True, False]),
         },
+        "inventory": inv,
+        "max_weight": 120.0,
         "properties": [
             {"type": "Apartment", "location": "Integrity Way, Apt 4B", "value": 85000},
             {"type": "Warehouse", "location": "La Mesa Docks Unit 12", "value": 250000},
         ],
         "vehicles": [
-            {"model": "Karin Sultan RS", "plate": plates[0], "garage": "Legion Square", "stored": True},
-            {"model": "Pfister Comet SR", "plate": plates[1], "garage": "Impound", "stored": False},
-            {"model": "Bravado Banshee", "plate": plates[2], "garage": "Mirror Park", "stored": True},
+            {"model": "Karin Sultan RS", "plate": plates[0], "garage": "Legion Square", "stored": True, "class": "Sports"},
+            {"model": "Pfister Comet SR", "plate": plates[1], "garage": "Impound", "stored": False, "class": "Super"},
+            {"model": "Bravado Banshee", "plate": plates[2], "garage": "Mirror Park", "stored": True, "class": "Sports"},
         ],
+        "transactions": transactions,
+        "position": {"x": random.randint(-1500, 1500), "y": random.randint(-2000, 2000)},
+    }
+
+
+def _seed_fivem_profile(discord_id: str, username: str) -> dict:
+    """Mock TMC / QBCore / ESX-style multi-character data for a freshly linked account.
+
+    In production this data comes from your MySQL game DB. Query examples per framework:
+      TMC    -> SELECT * FROM users WHERE identifier = ? (accounts/job/licenses stored on the
+                TMC user row + related character tables; adjust column names to your TMC build)
+      QBCore -> SELECT * FROM players WHERE license = ? (charinfo/money/metadata JSON columns)
+      ESX    -> SELECT * FROM users WHERE identifier = ? (accounts/job/... columns)
+      Vehicles -> SELECT * FROM player_vehicles WHERE citizenid/owner/identifier = ?
+      Inventory -> ox_inventory / qb-inventory table or the `inventory` JSON column.
+    """
+    base = username.split("#")[0][:10].capitalize() or "Citizen"
+    return {
+        "discord_id": discord_id,
+        "characters": [
+            _make_character(discord_id, base, "Mercer", True),
+            _make_character(discord_id, "Alex", "Kovic", False),
+        ],
+        "active_character": 0,
+        "data_source": "mock",
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
 

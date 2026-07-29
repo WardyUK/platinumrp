@@ -1,0 +1,26 @@
+{
+  "summary": "End-to-end verification of the NEW advanced Player Dashboard + Map upgrades (self-hosted GTA V tiles, custom icon blips, live moving players, precise game-coord placement). Backend: 7/7 pytest cases pass — /api/server/status shape, /api/server/players-live returns 8 players with position CHANGE between two polls 2.5s apart (movement confirmed), /api/auth/me with seeded JWT returns full new multi-character schema (2 chars each with cash/bank/crypto/status{5 vitals}/inventory/skills/licenses/properties/vehicles/transactions), Discord login URL well-formed, unauth/invalid tokens correctly 401. Frontend (Playwright on public URL with seeded JWT): dashboard-welcome + both char-switch buttons render; clicking char-switch-1 changes cash from $3,366 → $5,760 (data actually swaps). All 5 vital bars (health/armor/hunger/thirst/stress) and all 4 money cards (cash/bank/crypto/networth) render. Tabs overview/inventory/bank/assets all switch content (inventory-grid renders 7 tiles with data-testid inv-item-* + carry-weight bar; bank-transactions list renders; assets shows properties+vehicles). Map: 18/18 self-hosted tiles load from same origin /tiles/atlas/, satellite and road toggles switch URL to /tiles/satellite/ and /tiles/road/ (18/18 loaded each). Six div.blip elements on 'All'; filters yield exactly 2/2/2/6 for police/safe/business/all. Live toggle is ON by default with 8 pblip markers and label 'Live Players (8)'; toggling off removes all 8 markers. Clicking a blip opens popup showing category ('BUSINESS'), name ('Benny's Original Motorworks'), description and game coords 'x:-205 y:-1310'. ZERO console errors/warnings during the entire flow. Screenshot confirms atlas tiles fill the container edge-to-edge at zoom=4 and blips sit on land in sensible regions.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_backend.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py get_current_user auto-migrates legacy single-character docs to the new multi-character schema on read — clean, backward compatible.",
+    "ServerMap.jsx uses key={mapStyle} on TileLayer to force reload on style change and errorTileUrl for graceful degradation — both good.",
+    "Live players polled every 3s via setInterval; interval is cleared on unmount and on showLive toggle — no leak.",
+    "gameToLatLng calibration constants (SCALE/XC/YC) are centralised in a CAL object with an inline tuning comment — easy to adjust later.",
+    "Dashboard.jsx and server.py are both approaching ~430 lines; still under the 700-line threshold but consider splitting Dashboard into DashboardVitals / DashboardTabs subcomponents if more features are added.",
+    "server.py _make_character seeds random data on every request path that triggers migration — deterministic seeding (e.g. seeded random by discord_id) would make QA repeatable, but not blocking."
+  ],
+  "updated_files": ["/app/backend/tests/test_backend.py"],
+  "success_rate": {"backend": "100% (7/7)", "frontend": "100% (all checks passed)"},
+  "test_credentials": "Seeded JWT for TestCitizen (discord_id 999000111222333444) in /app/memory/test_credentials.md",
+  "seed_data_creation": "None (used pre-seeded test player)",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Advanced Dashboard + Map upgrades are fully verified. Self-hosted tiles live in /app/frontend/public/tiles/{atlas,satellite,road}/ (zoom 3-5). If tile pyramid or CRS is changed, re-run the map portion of the Playwright script. The auth/me schema now has top-level 'characters' array — old top-level keys (character, licenses, ...) no longer exist and legacy docs are migrated on first read.",
+  "rca of the issue": "N/A — no issues found."
+}

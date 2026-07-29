@@ -3,58 +3,24 @@
 // Swap these arrays for live API/DB responses when going to production.
 // ---------------------------------------------------------------------------
 
-// GTA V map positions in Leaflet CRS.Simple coords ([lat, lng] where lat is 0..-88
-// top→bottom / north→south, lng is 0..88 left→right / west→east on the gta5-map atlas).
+// GTA V in-game world coordinates (x = west→east, y = south→north). These are
+// converted to the map's CRS.Simple space by gameToLatLng() in ServerMap.jsx.
 export const MAP_BLIPS = [
-  {
-    id: 'lspd-mission-row',
-    type: 'police',
-    name: 'Mission Row PD (LSPD)',
-    desc: 'Central Los Santos Police Department. Booking, armory & impound.',
-    pos: [-58, 47],
-  },
-  {
-    id: 'bcso-paleto',
-    type: 'police',
-    name: 'BCSO — Paleto Bay',
-    desc: "Blaine County Sheriff's Office. Rural patrol HQ up north.",
-    pos: [-20, 45],
-  },
-  {
-    id: 'pillbox-hospital',
-    type: 'safe',
-    name: 'Pillbox Medical Center',
-    desc: 'Safe zone. EMS respawn & downed-player revives.',
-    pos: [-56, 50],
-  },
-  {
-    id: 'legion-spawn',
-    type: 'safe',
-    name: 'Legion Square Spawn',
-    desc: 'New citizen spawn point. Green (no-crime) zone.',
-    pos: [-61, 46],
-  },
-  {
-    id: 'benny-mechanic',
-    type: 'business',
-    name: "Benny's Original Motorworks",
-    desc: 'Player-run mechanic shop. Custom builds & repairs.',
-    pos: [-54, 53],
-  },
-  {
-    id: 'vanilla-unicorn',
-    type: 'business',
-    name: 'Vanilla Unicorn (Nightclub)',
-    desc: 'Player-owned nightclub. Events, DJ sets & VIP tables.',
-    pos: [-66, 43],
-  },
+  { id: 'lspd-mission-row', type: 'police', name: 'Mission Row PD (LSPD)', desc: 'Central Los Santos Police Department. Booking, armory & impound.', game: [428, -984] },
+  { id: 'bcso-paleto', type: 'police', name: 'BCSO — Paleto Bay', desc: "Blaine County Sheriff's Office. Rural patrol HQ up north.", game: [-448, 6008] },
+  { id: 'pillbox-hospital', type: 'safe', name: 'Pillbox Medical Center', desc: 'Safe zone. EMS respawn & downed-player revives.', game: [307, -1433] },
+  { id: 'legion-spawn', type: 'safe', name: 'Legion Square Spawn', desc: 'New citizen spawn point. Green (no-crime) zone.', game: [195, -935] },
+  { id: 'benny-mechanic', type: 'business', name: "Benny's Original Motorworks", desc: 'Player-run mechanic shop. Custom builds & repairs.', game: [-205, -1310] },
+  { id: 'vanilla-unicorn', type: 'business', name: 'Vanilla Unicorn (Nightclub)', desc: 'Player-owned nightclub. Events, DJ sets & VIP tables.', game: [105, -1305] },
 ];
 
 export const BLIP_STYLES = {
-  police: { color: '#a64dff', label: 'Police Station', ring: 'rgba(166,77,255,0.25)' },
-  safe: { color: '#22c55e', label: 'Safe Zone', ring: 'rgba(34,197,94,0.25)' },
-  business: { color: '#7b2ff7', label: 'Business', ring: 'rgba(123,47,247,0.25)' },
+  police: { color: '#a64dff', label: 'Police Station', icon: 'M12 2 4 5v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5z' },
+  safe: { color: '#22c55e', label: 'Safe Zone', icon: 'M12 5v14M5 12h14' },
+  business: { color: '#7b2ff7', label: 'Business', icon: 'M4 9l1.2-4.5A1 1 0 0 1 6.2 4h11.6a1 1 0 0 1 1 .5L20 9M4 9h16M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9M9 20v-5h6v5' },
 };
+
+export const PLAYER_BLIP_COLORS = { civ: '#e5e7eb', police: '#a64dff', ems: '#ef4444' };
 
 export const STORE_PACKAGES = [
   {

@@ -107,3 +107,39 @@ code {
     100% { box-shadow: 0 0 0 0 rgba(166,77,255,0); }
 }
 .live-dot { animation: pulse-ring 2s infinite; }
+
+/* ---- Custom map blip icons ---- */
+.blip {
+    width: 34px; height: 34px;
+    display: grid; place-items: center;
+    border-radius: 999px;
+    background: rgba(9, 9, 12, 0.82);
+    border: 2px solid var(--c);
+    color: var(--c);
+    box-shadow: 0 0 12px var(--c), inset 0 0 6px rgba(255,255,255,0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    cursor: pointer;
+}
+.blip:hover { transform: scale(1.18); box-shadow: 0 0 22px var(--c); }
+.blip svg { width: 18px; height: 18px; }
+
+/* ---- Live player blips ---- */
+.pblip { position: relative; width: 16px; height: 16px; }
+.pblip .pdot {
+    position: absolute; inset: 3px;
+    border-radius: 999px; background: var(--pc);
+    box-shadow: 0 0 10px var(--pc);
+}
+.pblip::before {
+    content: ""; position: absolute; inset: 0;
+    border-radius: 999px; border: 2px solid var(--pc);
+    animation: pblip-pulse 1.8s ease-out infinite;
+}
+@keyframes pblip-pulse {
+    0% { transform: scale(0.6); opacity: 0.9; }
+    100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* ---- Stat / progress bars ---- */
+@keyframes bar-fill { from { width: 0; } }
+.stat-bar-fill { animation: bar-fill 0.9s ease-out; }
