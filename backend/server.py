@@ -70,7 +70,7 @@ def _mock_status() -> dict:
     players = random.randint(38, 118)
     return {
         "online": True,
-        "hostname": "NEON CITY RP | Serious Economy | QBCore",
+        "hostname": "PLATINUM ROLEPLAY | Serious Economy | QBCore",
         "players": players,
         "max_players": 128,
         "staff_online": random.randint(2, 7),
@@ -254,7 +254,7 @@ async def auth_me(user: dict = Depends(get_current_user)):
 # ===========================================================================
 @api_router.get("/")
 async def root():
-    return {"message": "Neon City RP API", "discord_configured": _discord_configured()}
+    return {"message": "Platinum Roleplay API", "discord_configured": _discord_configured()}
 
 
 app.include_router(api_router)

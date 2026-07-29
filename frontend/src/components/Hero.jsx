@@ -10,7 +10,7 @@ const HERO_BG =
 // Client-side fallback used if the backend proxy itself is unreachable.
 const MOCK = {
   online: true,
-  hostname: 'NEON CITY RP | Serious Economy | QBCore',
+  hostname: 'PLATINUM ROLEPLAY | Serious Economy | QBCore',
   players: 48,
   max_players: 128,
   staff_online: 4,
@@ -90,7 +90,7 @@ export default function Hero() {
           </div>
 
           <h1 className="font-outfit text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05]">
-            Live your second life in <span className="neon-text">Neon City</span>
+            Live your second life in <span className="neon-text">Platinum Roleplay</span>
           </h1>
           <p className="mt-5 text-base sm:text-lg text-slate-300 max-w-xl leading-relaxed">
             A serious-economy FiveM roleplay server. Build a legend, run the streets, or hold the

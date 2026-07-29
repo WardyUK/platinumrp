@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Gamepad2 } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+
+const LOGO = 'https://customer-assets-m6fa6gv7.emergentagent.net/job_fivem-hub-11/artifacts/wbrr848j_PRP-Logo-Transparent.png';
 
 const LINKS = [
   { id: 'home', label: 'Home' },
@@ -32,12 +34,10 @@ export default function Navbar({ user, onLogout }) {
       data-testid="main-navbar"
     >
       <nav className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
-        <button onClick={() => go('home')} className="flex items-center gap-2" data-testid="nav-logo">
-          <span className="grid place-items-center h-9 w-9 rounded-lg bg-gradient-to-br from-[#00f2fe] to-[#4facfe] text-zinc-950">
-            <Gamepad2 size={20} strokeWidth={2.5} />
-          </span>
-          <span className="font-outfit font-extrabold text-lg tracking-tight">
-            NEON<span className="neon-text">CITY</span>
+        <button onClick={() => go('home')} className="flex items-center gap-2.5" data-testid="nav-logo">
+          <img src={LOGO} alt="Platinum Roleplay" className="h-11 w-11 object-contain drop-shadow-[0_0_10px_rgba(124,58,237,0.6)]" />
+          <span className="font-outfit font-extrabold text-lg tracking-tight leading-none">
+            PLATINUM<span className="neon-text"> RP</span>
           </span>
         </button>
 
