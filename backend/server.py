@@ -307,6 +307,21 @@ def _seed_fivem_profile(discord_id: str, username: str) -> dict:
     }
 
 
+@api_router.post("/auth/demo-login")
+async def demo_login():
+    """Instant demo login — mints a session for a demo citizen without Discord.
+    Lets you explore the control panel immediately. Remove/disable in production."""
+    discord_id = "demo_guest"
+    existing = await db.players.find_one({"discord_id": discord_id})
+    if not existing:
+        doc = _seed_fivem_profile(discord_id, "Demo")
+        doc["discord"] = {"username": "Demo Citizen", "avatar": None, "email": None}
+        doc["data_source"] = "demo"
+        await db.players.insert_one(doc)
+    token = _create_jwt(discord_id)
+    return {"token": token}
+
+
 @api_router.get("/auth/discord/login")
 async def discord_login():
     if not _discord_configured():

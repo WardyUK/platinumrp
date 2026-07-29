@@ -64,7 +64,7 @@ const Pill = ({ ok, label }) => (
   </span>
 );
 
-export default function Dashboard({ user, loading }) {
+export default function Dashboard({ user, loading, onRefresh }) {
   const [active, setActive] = useState(0);
 
   const login = async () => {
@@ -73,6 +73,17 @@ export default function Dashboard({ user, loading }) {
       window.location.href = res.data.url;
     } catch {
       toast.error('Discord login unavailable', { description: 'OAuth is not configured on the server yet.' });
+    }
+  };
+
+  const demoLogin = async () => {
+    try {
+      const res = await api.post('/auth/demo-login');
+      localStorage.setItem('ncrp_token', res.data.token);
+      toast.success('Welcome, Demo Citizen', { description: 'Exploring the control panel in demo mode.' });
+      onRefresh?.();
+    } catch {
+      toast.error('Could not start demo session');
     }
   };
 
