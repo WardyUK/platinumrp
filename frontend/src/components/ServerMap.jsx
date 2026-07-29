@@ -88,8 +88,8 @@ export default function ServerMap() {
           <MapContainer
             crs={L.CRS.Simple}
             center={[-44, 44]}
-            zoom={3}
-            minZoom={2}
+            zoom={4}
+            minZoom={3}
             maxZoom={6}
             maxBounds={[[8, -8], [-96, 96]]}
             maxBoundsViscosity={0.9}
@@ -102,6 +102,7 @@ export default function ServerMap() {
               tileSize={256}
               noWrap={true}
               bounds={MAP_BOUNDS}
+              errorTileUrl="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
               attribution='GTA V map &copy; gta5-map.github.io'
             />
             {blips.map((b) => {
