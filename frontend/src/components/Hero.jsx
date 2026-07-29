@@ -71,7 +71,17 @@ export default function Hero() {
         <img src={HERO_BG} alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/85 to-zinc-950/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-zinc-950/60" />
+        <motion.img
+          src="/logo.png"
+          alt=""
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 0.12, scale: 1 }}
+          transition={{ duration: 1.4, ease: 'easeOut' }}
+          className="pointer-events-none select-none absolute -right-24 sm:right-0 top-1/2 -translate-y-1/2 w-[520px] max-w-[70vw] drop-shadow-[0_0_60px_rgba(123,47,247,0.5)]"
+        />
       </div>
+
+      <div className="pointer-events-none absolute -top-32 right-1/4 h-96 w-96 rounded-full bg-[#7b2ff7]/20 blur-[120px]" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full grid lg:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
         <motion.div

@@ -13,6 +13,7 @@ from datetime import datetime, timezone, timedelta
 from urllib.parse import urlencode
 import jwt
 import httpx
+import game_db
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -231,16 +232,21 @@ async def discord_callback(code: Optional[str] = None, error: Optional[str] = No
     if profile.get("avatar"):
         avatar = f"https://cdn.discordapp.com/avatars/{discord_id}/{profile['avatar']}.png"
 
+    discord_meta = {"username": username, "avatar": avatar, "email": profile.get("email")}
+
+    # Prefer live data from the TMC/QBCore/ESX game DB; fall back to mock seed.
+    live = await game_db.fetch_player_by_discord(discord_id)
     existing = await db.players.find_one({"discord_id": discord_id})
-    if not existing:
+    if live:
+        live["discord"] = discord_meta
+        await db.players.update_one({"discord_id": discord_id}, {"$set": live}, upsert=True)
+    elif not existing:
         doc = _seed_fivem_profile(discord_id, profile.get("username", "citizen"))
-        doc["discord"] = {"username": username, "avatar": avatar, "email": profile.get("email")}
+        doc["discord"] = discord_meta
+        doc["data_source"] = "mock"
         await db.players.insert_one(doc)
     else:
-        await db.players.update_one(
-            {"discord_id": discord_id},
-            {"$set": {"discord": {"username": username, "avatar": avatar, "email": profile.get("email")}}},
-        )
+        await db.players.update_one({"discord_id": discord_id}, {"$set": {"discord": discord_meta}})
 
     token = _create_jwt(discord_id)
     return RedirectResponse(f"{FRONTEND_URL}/?token={token}")
