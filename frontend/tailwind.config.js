@@ -13,8 +13,8 @@ module.exports = {
       },
       colors: {
         neon: {
-          cyan: '#00f2fe',
-          purple: '#4facfe',
+          cyan: '#a64dff',
+          purple: '#7b2ff7',
         },
       },
       borderRadius: {

@@ -70,7 +70,7 @@ def _mock_status() -> dict:
     players = random.randint(38, 118)
     return {
         "online": True,
-        "hostname": "PLATINUM ROLEPLAY | Serious Economy | QBCore",
+        "hostname": "PLATINUM ROLEPLAY | Serious Economy | TMC",
         "players": players,
         "max_players": 128,
         "staff_online": random.randint(2, 7),
@@ -143,19 +143,21 @@ async def get_current_user(authorization: Optional[str] = Header(None)):
 
 
 def _seed_fivem_profile(discord_id: str, username: str) -> dict:
-    """Mock QBCore/ESX-style character data for a freshly linked account.
+    """Mock TMC / QBCore / ESX-style character data for a freshly linked account.
 
-    In production this data comes from your MySQL game DB, e.g.:
+    In production this data comes from your MySQL game DB. Query examples per framework:
+      TMC    -> SELECT * FROM users WHERE identifier = ? (accounts/job/licenses stored on the
+                TMC user row + related character tables; adjust column names to your TMC build)
       QBCore -> SELECT * FROM players WHERE license = ? (charinfo/money/... JSON columns)
       ESX    -> SELECT * FROM users WHERE identifier = ? (accounts/job/... columns)
-      Vehicles -> SELECT * FROM player_vehicles WHERE citizenid/owner = ?
+      Vehicles -> SELECT * FROM player_vehicles WHERE citizenid/owner/identifier = ?
     """
     plates = ["NEON4LYF", "GHOST22", "APEX 09", "V1CE C1TY", "LSPD K9"]
     return {
         "discord_id": discord_id,
         "character": {
             "name": username.upper() + " MERCER",
-            "citizen_id": "QB" + str(random.randint(10000, 99999)),
+            "citizen_id": "TMC" + str(random.randint(10000, 99999)),
             "cash": random.randint(1200, 8500),
             "bank": random.randint(45000, 320000),
             "job": random.choice(["Police Officer", "EMS", "Mechanic", "Unemployed"]),

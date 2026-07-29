@@ -16,7 +16,7 @@ export default function RulesLore() {
     <section id="rules" className="relative py-24 px-5 sm:px-8" data-testid="rules-section">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl">
-          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#4facfe] mb-3">Read before you play</div>
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#7b2ff7] mb-3">Read before you play</div>
           <h2 className="font-outfit text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
             Rules & <span className="neon-text">Lore Hub</span>
           </h2>
@@ -32,12 +32,12 @@ export default function RulesLore() {
                   onClick={() => setTab(t.key)}
                   className={`flex-1 lg:flex-none inline-flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left transition-colors ${
                     tab === t.key
-                      ? 'bg-gradient-to-r from-[#00f2fe]/20 to-[#4facfe]/10 text-white border border-[#00f2fe]/30'
+                      ? 'bg-gradient-to-r from-[#a64dff]/20 to-[#7b2ff7]/10 text-white border border-[#a64dff]/30'
                       : 'text-slate-400 hover:text-white hover:bg-white/5'
                   }`}
                   data-testid={`rules-tab-${t.key}`}
                 >
-                  <t.icon size={18} className={tab === t.key ? 'text-[#00f2fe]' : ''} />
+                  <t.icon size={18} className={tab === t.key ? 'text-[#a64dff]' : ''} />
                   <span className="hidden sm:inline">{t.label}</span>
                 </button>
               ))}
@@ -55,20 +55,20 @@ export default function RulesLore() {
                 data-testid="rules-content"
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <ScrollText className="text-[#00f2fe]" />
+                  <ScrollText className="text-[#a64dff]" />
                   <h3 className="font-outfit text-xl sm:text-2xl font-bold">Server Rules & Laws</h3>
                 </div>
                 <Accordion type="single" collapsible defaultValue={RULES[0].id} className="w-full">
                   {RULES.map((r) => (
                     <AccordionItem key={r.id} value={r.id} className="border-white/10">
-                      <AccordionTrigger className="text-left font-outfit font-semibold text-base hover:text-[#00f2fe] hover:no-underline" data-testid={`rule-trigger-${r.id}`}>
+                      <AccordionTrigger className="text-left font-outfit font-semibold text-base hover:text-[#a64dff] hover:no-underline" data-testid={`rule-trigger-${r.id}`}>
                         {r.title}
                       </AccordionTrigger>
                       <AccordionContent>
                         <ul className="space-y-3 pt-2">
                           {r.body.map((line, i) => (
                             <li key={i} className="flex gap-3 text-slate-300 leading-relaxed">
-                              <span className="text-[#4facfe] font-bold shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                              <span className="text-[#7b2ff7] font-bold shrink-0">{String(i + 1).padStart(2, '0')}</span>
                               {line}
                             </li>
                           ))}
@@ -87,13 +87,13 @@ export default function RulesLore() {
                 data-testid="lore-content"
               >
                 <div className="flex items-center gap-3 mb-6">
-                  <BookOpen className="text-[#4facfe]" />
+                  <BookOpen className="text-[#7b2ff7]" />
                   <h3 className="font-outfit text-xl sm:text-2xl font-bold">City Lore & Storylines</h3>
                 </div>
                 <div className="space-y-8">
                   {LORE.map((l, i) => (
                     <article key={i} className="relative pl-6 border-l-2 border-white/10">
-                      <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe]" />
+                      <span className="absolute -left-[7px] top-1.5 h-3 w-3 rounded-full bg-gradient-to-r from-[#a64dff] to-[#7b2ff7]" />
                       <h4 className="font-outfit text-lg font-bold neon-text">{l.heading}</h4>
                       <p className="mt-2 text-slate-300 leading-relaxed">{l.text}</p>
                     </article>

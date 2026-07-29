@@ -26,7 +26,7 @@ export default function Store() {
 
       <div className="relative max-w-7xl mx-auto">
         <div className="max-w-2xl">
-          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#00f2fe] mb-3">Support the city</div>
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#a64dff] mb-3">Support the city</div>
           <h2 className="font-outfit text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
             Donation & <span className="neon-text">Store Hub</span>
           </h2>
@@ -48,19 +48,19 @@ export default function Store() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className={`relative rounded-2xl p-7 flex flex-col ${
                   pkg.featured
-                    ? 'bg-gradient-to-b from-[#00f2fe]/10 to-[#4facfe]/5 border-2 border-[#00f2fe]/50 shadow-[0_0_30px_rgba(0,242,254,0.25)]'
+                    ? 'bg-gradient-to-b from-[#a64dff]/10 to-[#7b2ff7]/5 border-2 border-[#a64dff]/50 shadow-[0_0_30px_rgba(166,77,255,0.25)]'
                     : 'glass'
                 }`}
                 data-testid={`store-card-${pkg.id}`}
               >
                 {pkg.featured && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold text-zinc-950 bg-gradient-to-r from-[#00f2fe] to-[#4facfe]">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold text-zinc-950 bg-gradient-to-r from-[#a64dff] to-[#7b2ff7]">
                     {pkg.tagline}
                   </span>
                 )}
                 <span
                   className={`grid place-items-center h-12 w-12 rounded-xl border border-white/10 ${
-                    pkg.featured ? 'text-[#00f2fe] bg-[#00f2fe]/15' : 'text-[#4facfe] bg-[#4facfe]/10'
+                    pkg.featured ? 'text-[#a64dff] bg-[#a64dff]/15' : 'text-[#7b2ff7] bg-[#7b2ff7]/10'
                   }`}
                 >
                   <Icon size={24} />
@@ -76,7 +76,7 @@ export default function Store() {
                 <ul className="mt-6 space-y-3 flex-1">
                   {pkg.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
-                      <Check size={17} className="text-[#00f2fe] shrink-0 mt-0.5" />
+                      <Check size={17} className="text-[#a64dff] shrink-0 mt-0.5" />
                       {f}
                     </li>
                   ))}
@@ -86,7 +86,7 @@ export default function Store() {
                   onClick={() => checkout(pkg)}
                   className={`mt-7 w-full py-3 rounded-full font-outfit font-bold transition-all ${
                     pkg.featured
-                      ? 'bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-zinc-950 hover:shadow-[0_0_25px_rgba(0,242,254,0.6)]'
+                      ? 'bg-gradient-to-r from-[#a64dff] to-[#7b2ff7] text-zinc-950 hover:shadow-[0_0_25px_rgba(166,77,255,0.6)]'
                       : 'glass hover:bg-white/10 text-white'
                   }`}
                   data-testid={`store-checkout-${pkg.id}`}

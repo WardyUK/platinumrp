@@ -25,7 +25,7 @@ export default function ServerMap() {
           transition={{ duration: 0.6 }}
           className="max-w-2xl"
         >
-          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#00f2fe] mb-3">Explore the city</div>
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#a64dff] mb-3">Explore the city</div>
           <h2 className="font-outfit text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
             Interactive <span className="neon-text">City Map</span>
           </h2>
@@ -42,7 +42,7 @@ export default function ServerMap() {
               onClick={() => setFilter(f.key)}
               className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
                 filter === f.key
-                  ? 'bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-zinc-950'
+                  ? 'bg-gradient-to-r from-[#a64dff] to-[#7b2ff7] text-zinc-950'
                   : 'glass text-slate-300 hover:bg-white/10'
               }`}
               data-testid={`map-filter-${f.key}`}

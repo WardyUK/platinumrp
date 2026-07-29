@@ -72,7 +72,7 @@ export default function Navbar({ user, onLogout }) {
           ) : (
             <button
               onClick={() => go('dashboard')}
-              className="hidden md:inline-flex text-sm font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-[#00f2fe] to-[#4facfe] text-zinc-950 hover:opacity-90 transition-opacity"
+              className="hidden md:inline-flex text-sm font-semibold px-4 py-2 rounded-full bg-gradient-to-r from-[#a64dff] to-[#7b2ff7] text-zinc-950 hover:opacity-90 transition-opacity"
               data-testid="nav-login-cta"
             >
               Player Login

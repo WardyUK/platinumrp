@@ -10,7 +10,7 @@ const HERO_BG =
 // Client-side fallback used if the backend proxy itself is unreachable.
 const MOCK = {
   online: true,
-  hostname: 'PLATINUM ROLEPLAY | Serious Economy | QBCore',
+  hostname: 'PLATINUM ROLEPLAY | Serious Economy | TMC',
   players: 48,
   max_players: 128,
   staff_online: 4,
@@ -81,8 +81,8 @@ export default function Hero() {
         >
           <div className="inline-flex items-center gap-2 glass rounded-full px-3 py-1.5 mb-6" data-testid="live-badge">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="live-dot absolute inline-flex h-full w-full rounded-full bg-[#00f2fe]" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00f2fe]" />
+              <span className="live-dot absolute inline-flex h-full w-full rounded-full bg-[#a64dff]" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#a64dff]" />
             </span>
             <span className="text-xs uppercase tracking-[0.2em] font-semibold text-slate-300">
               {status.online ? 'Server Online' : 'Offline'} · {status.source === 'live' ? 'Live' : 'Demo'} data
@@ -100,7 +100,7 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <button
               onClick={connect}
-              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-outfit font-bold text-zinc-950 bg-gradient-to-r from-[#00f2fe] to-[#4facfe] shadow-[0_0_20px_rgba(0,242,254,0.35)] hover:shadow-[0_0_30px_rgba(0,242,254,0.7)] transition-shadow"
+              className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-outfit font-bold text-zinc-950 bg-gradient-to-r from-[#a64dff] to-[#7b2ff7] shadow-[0_0_20px_rgba(166,77,255,0.35)] hover:shadow-[0_0_30px_rgba(166,77,255,0.7)] transition-shadow"
               data-testid="connect-server-btn"
             >
               <Play size={18} strokeWidth={3} className="fill-zinc-950" />
@@ -108,14 +108,14 @@ export default function Hero() {
             </button>
             <button
               onClick={copyIp}
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold text-white glass hover:border-[#00f2fe]/50 hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-semibold text-white glass hover:border-[#a64dff]/50 hover:bg-white/10 transition-colors"
               data-testid="copy-ip-btn"
             >
               <Copy size={18} />
               Copy IP
             </button>
             <code className="hidden sm:inline-flex items-center gap-2 text-sm text-slate-400 glass rounded-full px-4 py-2" data-testid="server-ip-display">
-              <Signal size={14} className="text-[#00f2fe]" />
+              <Signal size={14} className="text-[#a64dff]" />
               {status.server_ip}
             </code>
           </div>
@@ -133,10 +133,10 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.12 }}
-              className="glass rounded-2xl p-5 flex items-center gap-4 hover:border-[#00f2fe]/40 transition-colors"
+              className="glass rounded-2xl p-5 flex items-center gap-4 hover:border-[#a64dff]/40 transition-colors"
               data-testid={s.testid}
             >
-              <span className="grid place-items-center h-12 w-12 rounded-xl bg-gradient-to-br from-[#00f2fe]/20 to-[#4facfe]/20 border border-white/10 text-[#00f2fe]">
+              <span className="grid place-items-center h-12 w-12 rounded-xl bg-gradient-to-br from-[#a64dff]/20 to-[#7b2ff7]/20 border border-white/10 text-[#a64dff]">
                 <s.icon size={22} />
               </span>
               <div>

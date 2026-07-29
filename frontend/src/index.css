@@ -19,7 +19,7 @@ code {
 }
 
 ::selection {
-    background: rgba(0, 242, 254, 0.3);
+    background: rgba(166, 77, 255, 0.3);
     color: #fff;
 }
 
@@ -27,7 +27,7 @@ code {
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: #0a0a0c; }
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(#00f2fe, #4facfe);
+    background: linear-gradient(#a64dff, #7b2ff7);
     border-radius: 6px;
 }
 
@@ -67,10 +67,10 @@ code {
         @apply backdrop-blur-md bg-white/5 border border-white/10;
     }
     .neon-text {
-        @apply text-transparent bg-clip-text bg-gradient-to-r from-[#00f2fe] to-[#4facfe];
+        @apply text-transparent bg-clip-text bg-gradient-to-r from-[#a64dff] to-[#7b2ff7];
     }
     .neon-border-glow {
-        box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+        box-shadow: 0 0 15px rgba(166, 77, 255, 0.25);
     }
 }
 
@@ -98,12 +98,12 @@ code {
 }
 .leaflet-popup-content-wrapper { border-radius: 12px; }
 .leaflet-control-attribution { background: rgba(0,0,0,0.5) !important; color: #666 !important; }
-.leaflet-control-attribution a { color: #00f2fe !important; }
-.leaflet-bar a { background: #111; color: #00f2fe; border-color: #222; }
+.leaflet-control-attribution a { color: #a64dff !important; }
+.leaflet-bar a { background: #111; color: #a64dff; border-color: #222; }
 
 @keyframes pulse-ring {
-    0% { box-shadow: 0 0 0 0 rgba(0,242,254,0.5); }
-    70% { box-shadow: 0 0 0 12px rgba(0,242,254,0); }
-    100% { box-shadow: 0 0 0 0 rgba(0,242,254,0); }
+    0% { box-shadow: 0 0 0 0 rgba(166,77,255,0.5); }
+    70% { box-shadow: 0 0 0 12px rgba(166,77,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(166,77,255,0); }
 }
 .live-dot { animation: pulse-ring 2s infinite; }

@@ -12,7 +12,7 @@ const DiscordMark = ({ size = 20 }) => (
   </svg>
 );
 
-const StatCard = ({ icon: Icon, title, accent = '#00f2fe', children, testid, delay = 0 }) => (
+const StatCard = ({ icon: Icon, title, accent = '#a64dff', children, testid, delay = 0 }) => (
   <motion.div
     initial={{ opacity: 0, y: 24 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -44,7 +44,7 @@ const Row = ({ label, value, mono }) => (
 const Pill = ({ ok, label }) => (
   <span
     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border ${
-      ok ? 'text-[#00f2fe] border-[#00f2fe]/40 bg-[#00f2fe]/10' : 'text-slate-500 border-white/10 bg-white/5'
+      ok ? 'text-[#a64dff] border-[#a64dff]/40 bg-[#a64dff]/10' : 'text-slate-500 border-white/10 bg-white/5'
     }`}
   >
     <ShieldCheck size={13} />
@@ -70,7 +70,7 @@ export default function Dashboard({ user, loading }) {
     <section id="dashboard" className="relative py-24 px-5 sm:px-8" data-testid="dashboard-section">
       <div className="max-w-7xl mx-auto">
         <div className="max-w-2xl">
-          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#4facfe] mb-3">Player UCP</div>
+          <div className="text-xs uppercase tracking-[0.2em] font-semibold text-[#7b2ff7] mb-3">Player UCP</div>
           <h2 className="font-outfit text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight">
             Your <span className="neon-text">Control Panel</span>
           </h2>
@@ -81,7 +81,7 @@ export default function Dashboard({ user, loading }) {
 
         {loading ? (
           <div className="mt-12 flex items-center justify-center h-64 glass rounded-2xl" data-testid="dashboard-loading">
-            <Loader2 className="animate-spin text-[#00f2fe]" size={32} />
+            <Loader2 className="animate-spin text-[#a64dff]" size={32} />
           </div>
         ) : !user ? (
           // ---------- Logged-out: Discord OAuth landing ----------
@@ -92,8 +92,8 @@ export default function Dashboard({ user, loading }) {
             className="mt-12 relative overflow-hidden glass rounded-3xl p-10 sm:p-14 text-center"
             data-testid="discord-login-panel"
           >
-            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#4facfe]/20 blur-3xl" />
-            <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[#00f2fe]/20 blur-3xl" />
+            <div className="absolute -top-24 -right-24 h-64 w-64 rounded-full bg-[#7b2ff7]/20 blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-[#a64dff]/20 blur-3xl" />
             <div className="relative">
               <span className="grid place-items-center h-16 w-16 mx-auto rounded-2xl bg-[#5865F2] text-white mb-6">
                 <DiscordMark size={32} />
@@ -118,14 +118,14 @@ export default function Dashboard({ user, loading }) {
           <div className="mt-12">
             <div className="flex items-center gap-4 mb-8 glass rounded-2xl p-5" data-testid="dashboard-welcome">
               {user.discord?.avatar && (
-                <img src={user.discord.avatar} alt="" className="h-14 w-14 rounded-full border-2 border-[#00f2fe]/50" />
+                <img src={user.discord.avatar} alt="" className="h-14 w-14 rounded-full border-2 border-[#a64dff]/50" />
               )}
               <div>
                 <div className="text-xs uppercase tracking-widest text-slate-400 font-semibold">Welcome back</div>
                 <div className="font-outfit text-xl font-bold">{user.discord?.username}</div>
               </div>
-              <span className="ml-auto inline-flex items-center gap-2 text-sm text-[#00f2fe]">
-                <span className="h-2 w-2 rounded-full bg-[#00f2fe] live-dot" /> Linked
+              <span className="ml-auto inline-flex items-center gap-2 text-sm text-[#a64dff]">
+                <span className="h-2 w-2 rounded-full bg-[#a64dff] live-dot" /> Linked
               </span>
             </div>
 
@@ -140,18 +140,18 @@ export default function Dashboard({ user, loading }) {
                     <div className="flex items-center gap-2 text-slate-400 text-xs uppercase tracking-widest">
                       <Wallet size={14} /> Cash
                     </div>
-                    <div className="font-outfit text-xl font-bold text-[#00f2fe] mt-1">{money(user.character?.cash)}</div>
+                    <div className="font-outfit text-xl font-bold text-[#a64dff] mt-1">{money(user.character?.cash)}</div>
                   </div>
                   <div className="rounded-xl bg-white/5 border border-white/10 p-4">
                     <div className="flex items-center gap-2 text-slate-400 text-xs uppercase tracking-widest">
                       <Landmark size={14} /> Bank
                     </div>
-                    <div className="font-outfit text-xl font-bold text-[#4facfe] mt-1">{money(user.character?.bank)}</div>
+                    <div className="font-outfit text-xl font-bold text-[#7b2ff7] mt-1">{money(user.character?.bank)}</div>
                   </div>
                 </div>
               </StatCard>
 
-              <StatCard icon={IdCard} title="Licenses" accent="#4facfe" testid="card-licenses" delay={0.08}>
+              <StatCard icon={IdCard} title="Licenses" accent="#7b2ff7" testid="card-licenses" delay={0.08}>
                 <div className="flex flex-wrap gap-2.5">
                   <Pill ok={user.licenses?.drivers} label="Drivers" />
                   <Pill ok={user.licenses?.weapons} label="Weapons" />
@@ -167,24 +167,24 @@ export default function Dashboard({ user, loading }) {
                 <div className="space-y-3">
                   {user.properties?.map((p, i) => (
                     <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 p-3.5">
-                      <span className="grid place-items-center h-9 w-9 rounded-lg bg-[#00f2fe]/15 text-[#00f2fe]">
+                      <span className="grid place-items-center h-9 w-9 rounded-lg bg-[#a64dff]/15 text-[#a64dff]">
                         {p.type === 'Warehouse' ? <Warehouse size={17} /> : <Home size={17} />}
                       </span>
                       <div className="min-w-0">
                         <div className="font-semibold text-sm">{p.type}</div>
                         <div className="text-xs text-slate-400 truncate">{p.location}</div>
                       </div>
-                      <div className="ml-auto text-sm font-semibold text-[#4facfe]">{money(p.value)}</div>
+                      <div className="ml-auto text-sm font-semibold text-[#7b2ff7]">{money(p.value)}</div>
                     </div>
                   ))}
                 </div>
               </StatCard>
 
-              <StatCard icon={Car} title="Garage & Vehicle Registry" accent="#4facfe" testid="card-vehicles" delay={0.24}>
+              <StatCard icon={Car} title="Garage & Vehicle Registry" accent="#7b2ff7" testid="card-vehicles" delay={0.24}>
                 <div className="space-y-3">
                   {user.vehicles?.map((v, i) => (
                     <div key={i} className="flex items-center gap-3 rounded-xl bg-white/5 border border-white/10 p-3.5">
-                      <span className="grid place-items-center h-9 w-9 rounded-lg bg-[#4facfe]/15 text-[#4facfe]">
+                      <span className="grid place-items-center h-9 w-9 rounded-lg bg-[#7b2ff7]/15 text-[#7b2ff7]">
                         <Car size={17} />
                       </span>
                       <div className="min-w-0">
@@ -195,7 +195,7 @@ export default function Dashboard({ user, loading }) {
                         <span className="inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded bg-black/40 border border-white/10">
                           <KeyRound size={11} /> {v.plate}
                         </span>
-                        <span className={`text-[11px] font-semibold ${v.stored ? 'text-[#00f2fe]' : 'text-amber-400'}`}>
+                        <span className={`text-[11px] font-semibold ${v.stored ? 'text-[#a64dff]' : 'text-amber-400'}`}>
                           {v.stored ? 'Stored' : 'Impounded'}
                         </span>
                       </div>

@@ -54,9 +54,9 @@ export const MAP_BLIPS = [
 ];
 
 export const BLIP_STYLES = {
-  police: { color: '#00f2fe', label: 'Police Station', ring: 'rgba(0,242,254,0.25)' },
+  police: { color: '#a64dff', label: 'Police Station', ring: 'rgba(166,77,255,0.25)' },
   safe: { color: '#22c55e', label: 'Safe Zone', ring: 'rgba(34,197,94,0.25)' },
-  business: { color: '#4facfe', label: 'Business', ring: 'rgba(79,172,254,0.25)' },
+  business: { color: '#7b2ff7', label: 'Business', ring: 'rgba(123,47,247,0.25)' },
 };
 
 export const STORE_PACKAGES = [
