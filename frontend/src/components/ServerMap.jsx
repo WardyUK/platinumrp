@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip } from 'react-leaflet';
+import L from 'leaflet';
 import { motion } from 'framer-motion';
 import { MapPin, Shield, Heart, Building2 } from 'lucide-react';
 import { MAP_BLIPS, BLIP_STYLES } from '@/data/mockData';
+
+// GTA V map tile pyramid (standard XYZ, ~88x88 CRS.Simple units, zoom 2-6 usable).
+const MAP_STYLES = {
+  atlas: 'https://gta5-map.github.io/tiles/atlas/{z}-{x}_{y}.png',
+  satellite: 'https://gta5-map.github.io/tiles/satellite/{z}-{x}_{y}.png',
+  road: 'https://gta5-map.github.io/tiles/road/{z}-{x}_{y}.png',
+};
+const MAP_BOUNDS = [[0, 0], [-88, 88]];
 
 const FILTERS = [
   { key: 'all', label: 'All', icon: MapPin },
@@ -13,6 +22,7 @@ const FILTERS = [
 
 export default function ServerMap() {
   const [filter, setFilter] = useState('all');
+  const [mapStyle, setMapStyle] = useState('atlas');
   const blips = MAP_BLIPS.filter((b) => filter === 'all' || b.type === filter);
 
   return (
@@ -35,7 +45,7 @@ export default function ServerMap() {
           </p>
         </motion.div>
 
-        <div className="mt-8 flex flex-wrap gap-2.5">
+        <div className="mt-8 flex flex-wrap items-center gap-2.5">
           {FILTERS.map((f) => (
             <button
               key={f.key}
@@ -51,6 +61,20 @@ export default function ServerMap() {
               {f.label}
             </button>
           ))}
+          <div className="ml-auto flex items-center gap-1.5 glass rounded-full p-1">
+            {Object.keys(MAP_STYLES).map((s) => (
+              <button
+                key={s}
+                onClick={() => setMapStyle(s)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize transition-colors ${
+                  mapStyle === s ? 'bg-[#7b2ff7] text-white' : 'text-slate-400 hover:text-white'
+                }`}
+                data-testid={`map-style-${s}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
 
         <motion.div
@@ -62,14 +86,23 @@ export default function ServerMap() {
           data-testid="leaflet-map-wrapper"
         >
           <MapContainer
-            center={[34.05, -118.255]}
-            zoom={13}
+            crs={L.CRS.Simple}
+            center={[-44, 44]}
+            zoom={3}
+            minZoom={2}
+            maxZoom={6}
+            maxBounds={[[8, -8], [-96, 96]]}
+            maxBoundsViscosity={0.9}
             scrollWheelZoom={false}
-            style={{ height: '520px', width: '100%', borderRadius: '14px' }}
+            style={{ height: '560px', width: '100%', borderRadius: '14px' }}
           >
             <TileLayer
-              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-              attribution='&copy; OpenStreetMap &copy; CARTO'
+              key={mapStyle}
+              url={MAP_STYLES[mapStyle]}
+              tileSize={256}
+              noWrap={true}
+              bounds={MAP_BOUNDS}
+              attribution='GTA V map &copy; gta5-map.github.io'
             />
             {blips.map((b) => {
               const style = BLIP_STYLES[b.type];

@@ -3,53 +3,50 @@
 // Swap these arrays for live API/DB responses when going to production.
 // ---------------------------------------------------------------------------
 
-// GTA V map is roughly a 8192x8192 game-unit square. Using Leaflet CRS.Simple
-// we map game units to image coordinates. Coordinates below are illustrative
-// placements on the CartoDB dark tile layer (lat/lng) so the demo renders
-// against a real slippy map. For a true GTA grid, load a custom tile set and
-// switch the map to L.CRS.Simple with [y, x] game coords.
+// GTA V map positions in Leaflet CRS.Simple coords ([lat, lng] where lat is 0..-88
+// top→bottom / north→south, lng is 0..88 left→right / west→east on the gta5-map atlas).
 export const MAP_BLIPS = [
   {
     id: 'lspd-mission-row',
     type: 'police',
     name: 'Mission Row PD (LSPD)',
     desc: 'Central Los Santos Police Department. Booking, armory & impound.',
-    pos: [34.052, -118.243],
+    pos: [-58, 47],
   },
   {
     id: 'bcso-paleto',
     type: 'police',
     name: 'BCSO — Paleto Bay',
-    desc: "Blaine County Sheriff's Office. Rural patrol HQ.",
-    pos: [34.101, -118.29],
+    desc: "Blaine County Sheriff's Office. Rural patrol HQ up north.",
+    pos: [-20, 45],
   },
   {
     id: 'pillbox-hospital',
     type: 'safe',
     name: 'Pillbox Medical Center',
     desc: 'Safe zone. EMS respawn & downed-player revives.',
-    pos: [34.041, -118.26],
+    pos: [-56, 50],
   },
   {
     id: 'legion-spawn',
     type: 'safe',
     name: 'Legion Square Spawn',
     desc: 'New citizen spawn point. Green (no-crime) zone.',
-    pos: [34.045, -118.25],
+    pos: [-61, 46],
   },
   {
     id: 'benny-mechanic',
     type: 'business',
     name: "Benny's Original Motorworks",
     desc: 'Player-run mechanic shop. Custom builds & repairs.',
-    pos: [34.06, -118.27],
+    pos: [-54, 53],
   },
   {
     id: 'vanilla-unicorn',
     type: 'business',
     name: 'Vanilla Unicorn (Nightclub)',
     desc: 'Player-owned nightclub. Events, DJ sets & VIP tables.',
-    pos: [34.03, -118.235],
+    pos: [-66, 43],
   },
 ];
 
