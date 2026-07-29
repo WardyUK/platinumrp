@@ -7,6 +7,16 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        outfit: ['Outfit', 'sans-serif'],
+        ibm: ['IBM Plex Sans', 'sans-serif'],
+      },
+      colors: {
+        neon: {
+          cyan: '#00f2fe',
+          purple: '#4facfe',
+        },
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

@@ -1,0 +1,29 @@
+{
+  "summary": "Comprehensive backend + frontend E2E testing for Neon City RP FiveM hub. All 5 backend pytest tests pass and every reviewer-specified frontend flow verified end-to-end, including the Hero's async refresh from /api/server/status (critical concern flagged by main agent).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_backend.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Hero.jsx uses a MOCK constant as initial state; if the /api/server/status fetch ever fails silently, users would see fabricated 48/128 values. Currently the backend always returns mock fallback so this is invisible, but consider a loading skeleton instead of pre-mock data.",
+    "backend/.env contains a real DISCORD_CLIENT_SECRET committed to the repo — rotate before production.",
+    "server.py stores JWT_SECRET default 'dev_secret' if env missing; safe because env is set, but should raise on missing secret in production mode.",
+    "Rules accordion only exposes data-testid='rule-trigger-general' (the other categories referenced by the review request — rp/combat — do not exist as separate accordion items in RulesLore.jsx). Not a bug, just naming mismatch with the review request."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_backend.py (new)"
+  ],
+  "success_rate": {"backend": "100% (5/5)", "frontend": "100% (all flows)"},
+  "test_credentials": "Used JWT from /app/memory/test_credentials.md for TestCitizen (discord_id 999000111222333444). Valid until 2026-08.",
+  "seed_data_creation": "None. Reused pre-seeded TestCitizen player in mongo (test_database.players).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified: (1) GET /api/server/status returns {online, hostname, players, max_players, staff_online, uptime, server_ip=123.45.67.89:30120, source='mock'}. (2) GET /api/auth/discord/login returns url containing client_id=1532041468955590916 and correct redirect_uri. (3) /api/auth/me: 401 without token, 401 with bad token, 200 with seeded JWT returning full player object (no _id leak). (4) Hero shows backend player count 96/128 (NOT the mock 48/128 initial), server-ip-display shows 123.45.67.89:30120 after fetch. (5) Copy IP triggers 'Copied!' toast. (6) Connect and Discord login buttons present; clicking discord-login-btn navigates browser to https://discord.com/oauth2/authorize?client_id=1532041468955590916... (7) Leaflet map renders 18 tiles + 6 blip circles (2 police, 2 safe, 2 business); filter buttons switch visible blips to 2 each. (8) Loading /?token=<JWT> stores token in localStorage 'ncrp_token', clears URL, and renders dashboard-welcome ('Welcome back TestCitizen') plus card-character, card-licenses, card-properties, card-vehicles with real seeded data. (9) All 3 store cards render, checkout button shows 'Redirecting to checkout ... Tebex' toast. (10) rules-tab-rules / rules-tab-lore switch content; rule-trigger-general accordion open->closed transitions correctly."
+}
