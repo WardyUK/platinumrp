@@ -27,3 +27,8 @@ Premium, responsive FiveM server website with 5 modules: Live Server Status & St
 
 ## Next Tasks
 - Connect real game DB and server IP when available.
+
+## Advanced Dashboard + Map Upgrades (2026-06-27, iteration 3)
+- Advanced Player UCP: multi-character switcher, vitals (health/armor/hunger/thirst/stress bars), cash/bank/crypto/net-worth, tabbed Overview/Inventory/Bank/Assets (inventory grid w/ weight + rarity, skills, licenses, bank transactions, properties, vehicles). `/api/auth/me` new multi-character schema; legacy docs auto-migrate.
+- Map: switched to self-hosted GTA V tiles (`/public/tiles/{atlas,satellite,road}` z3-5), Leaflet CRS.Simple, precise game-coordinate blip placement (`gameToLatLng` calibration), custom neon icon blips, live moving player blips via `/api/server/players-live` (polled 3s), style toggle + live toggle.
+- Verified 100% (backend 7/7, all frontend flows) — test_reports/iteration_3.json.
